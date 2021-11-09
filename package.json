@@ -1,0 +1,8 @@
+{
+  "name": "back-end_academia",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/HemersonChaves/back-end_academia.git",
+  "author": "Hemerson Chaves <hemersonchaves20@hotmail.com>",
+  "license": "MIT"
+}
