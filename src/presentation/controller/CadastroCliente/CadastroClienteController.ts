@@ -5,7 +5,7 @@ class CadastroClienteController implements IController {
     handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
         return Promise.resolve({
             statusCode: 400,
-            body: "",
+            body: new Error("Missing param: name"),
         });
     }
 }
