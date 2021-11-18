@@ -30,7 +30,8 @@
   "scripts": {
     "prepare": "husky install",
     "commit": "git-cz",
-    "test": "jest"
+    "test": "jest --silent --noStackTrace",
+    "test:unit": "yarn test -- --watch"
   },
   "config": {
     "commitizen": {
