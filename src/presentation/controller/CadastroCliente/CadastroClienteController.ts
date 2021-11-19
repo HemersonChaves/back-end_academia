@@ -15,7 +15,7 @@ class CadastroClienteController implements IController {
             console.log(httpRequest.body.email);
             return Promise.resolve({
                 statusCode: 400,
-                body: new Error("Missing param: email"),
+                body: new MissingParamError("email"),
             });
         }
         return Promise.resolve({
