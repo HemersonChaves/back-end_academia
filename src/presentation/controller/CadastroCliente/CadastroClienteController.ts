@@ -1,3 +1,4 @@
+import { MissingParamError } from "@/presentation/error";
 import { IHttpRequest, IHttpResponse } from "@/presentation/protocols";
 import { IController } from "@/presentation/protocols/IController";
 
@@ -7,7 +8,7 @@ class CadastroClienteController implements IController {
         if (!httpRequest.body.name) {
             return Promise.resolve({
                 statusCode: 400,
-                body: new Error("Missing param: name"),
+                body: new MissingParamError("name"),
             });
         }
         if (!httpRequest.body.email) {
