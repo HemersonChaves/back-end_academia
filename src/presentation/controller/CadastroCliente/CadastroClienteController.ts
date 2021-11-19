@@ -4,7 +4,13 @@ import { IController } from "@/presentation/protocols/IController";
 
 class CadastroClienteController implements IController {
     handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-        const requireFields = ["name", "email", "cpf", "telefone"];
+        const requireFields = [
+            "name",
+            "email",
+            "cpf",
+            "telefone",
+            "data_nascimento",
+        ];
         for (const field of requireFields) {
             if (!httpRequest.body[field]) {
                 return Promise.resolve({
