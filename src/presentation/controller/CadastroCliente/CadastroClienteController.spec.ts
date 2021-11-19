@@ -51,6 +51,20 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.statusCode).toBe(400);
         expect(httpResponse.body).toEqual(new MissingParamError("cpf"));
     });
-    it.todo("should return 400 if no telefone is provided");
+    test("should return 400 if no telefone is provided", async () => {
+        const sysUnderTest = makeSysUnderTest();
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "any@email.com",
+                cpf: "00000000000",
+                // telefone
+                data_nascimento: "00/00/0000",
+            },
+        };
+        const httpResponse = await sysUnderTest.handle(httpRequest);
+        expect(httpResponse.statusCode).toBe(400);
+        expect(httpResponse.body).toEqual(new MissingParamError("telefone"));
+    });
     it.todo("should return 400 if no data_nascimento is provided");
 });
