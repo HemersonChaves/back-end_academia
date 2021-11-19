@@ -34,7 +34,7 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new Error("Missing param: email"));
+        expect(httpResponse.body).toEqual(new MissingParamError("email"));
     });
     it.todo("should return 400 if no cpf is provided");
     it.todo("should return 400 if no telefone is provided");
