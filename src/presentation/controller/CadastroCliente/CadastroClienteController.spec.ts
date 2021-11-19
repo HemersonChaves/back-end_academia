@@ -1,8 +1,12 @@
 import { CadastroClienteController } from "./CadastroClienteController";
 
+const makeSysUnderTest = (): CadastroClienteController => {
+    return new CadastroClienteController();
+};
+
 describe("Cadastro Cliente Controller", () => {
     test("should return 400 if no name is provided", async () => {
-        const sysUnderTest = new CadastroClienteController();
+        const sysUnderTest = makeSysUnderTest();
         const httpRequest = {
             body: {
                 // no name
@@ -17,7 +21,7 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.body).toEqual(new Error("Missing param: name"));
     });
     test("should return 400 if no email is provided", async () => {
-        const sysUnderTest = new CadastroClienteController();
+        const sysUnderTest = makeSysUnderTest();
         const httpRequest = {
             body: {
                 name: "any name",
