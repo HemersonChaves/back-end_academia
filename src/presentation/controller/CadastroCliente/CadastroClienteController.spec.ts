@@ -1,3 +1,4 @@
+import { MissingParamError } from "../../error/MissingParamErro";
 import { CadastroClienteController } from "./CadastroClienteController";
 
 const makeSysUnderTest = (): CadastroClienteController => {
@@ -18,7 +19,7 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new Error("Missing param: name"));
+        expect(httpResponse.body).toEqual(new MissingParamError("name"));
     });
     test("should return 400 if no email is provided", async () => {
         const sysUnderTest = makeSysUnderTest();
