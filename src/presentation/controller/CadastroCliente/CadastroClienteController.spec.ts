@@ -1,13 +1,17 @@
 import { MissingParamError } from "../../error/MissingParamErro";
 import { CadastroClienteController } from "./CadastroClienteController";
 
-const makeSysUnderTest = (): CadastroClienteController => {
-    return new CadastroClienteController();
+interface ISutTypes {
+    sysUnderTest: CadastroClienteController;
+}
+const makeSysUnderTest = (): ISutTypes => {
+    const sysUnderTest = new CadastroClienteController();
+    return { sysUnderTest };
 };
 
 describe("Cadastro Cliente Controller", () => {
     test("should return 400 if no name is provided", async () => {
-        const sysUnderTest = makeSysUnderTest();
+        const { sysUnderTest } = makeSysUnderTest();
         const httpRequest = {
             body: {
                 // no name
@@ -22,7 +26,7 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.body).toEqual(new MissingParamError("name"));
     });
     test("should return 400 if no email is provided", async () => {
-        const sysUnderTest = makeSysUnderTest();
+        const { sysUnderTest } = makeSysUnderTest();
         const httpRequest = {
             body: {
                 name: "any name",
@@ -37,7 +41,7 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.body).toEqual(new MissingParamError("email"));
     });
     test("should return 400 if no cpf is provided", async () => {
-        const sysUnderTest = makeSysUnderTest();
+        const { sysUnderTest } = makeSysUnderTest();
         const httpRequest = {
             body: {
                 name: "any name",
@@ -52,7 +56,7 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.body).toEqual(new MissingParamError("cpf"));
     });
     test("should return 400 if no telefone is provided", async () => {
-        const sysUnderTest = makeSysUnderTest();
+        const { sysUnderTest } = makeSysUnderTest();
         const httpRequest = {
             body: {
                 name: "any name",
@@ -67,7 +71,7 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.body).toEqual(new MissingParamError("telefone"));
     });
     test("should return 400 if no data_nascimento is provided", async () => {
-        const sysUnderTest = makeSysUnderTest();
+        const { sysUnderTest } = makeSysUnderTest();
         const httpRequest = {
             body: {
                 name: "any name",
