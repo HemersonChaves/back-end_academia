@@ -1,12 +1,21 @@
+import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
+
 import { MissingParamError } from "../../error/MissingParamErro";
 import { CadastroClienteController } from "./CadastroClienteController";
 
 interface ISutTypes {
     sysUnderTest: CadastroClienteController;
+    cpfValidadorStub: ICpfValidador;
 }
 const makeSysUnderTest = (): ISutTypes => {
-    const sysUnderTest = new CadastroClienteController();
-    return { sysUnderTest };
+    class CpfValidadorStub implements ICpfValidador {
+        validar(cpf: string): boolean {
+            return true;
+        }
+    }
+    const cpfValidadorStub = new CpfValidadorStub();
+    const sysUnderTest = new CadastroClienteController(cpfValidadorStub);
+    return { sysUnderTest, cpfValidadorStub };
 };
 
 describe("Cadastro Cliente Controller", () => {
@@ -87,8 +96,25 @@ describe("Cadastro Cliente Controller", () => {
             new MissingParamError("data_nascimento")
         );
     });
-    it.todo("should call  CpfValidador with correct cpf");
-    it.todo("should call  EmailValidador with correct email");
-    it.todo("should call  DataNascimentoValidador with correct dataNascimento");
-    it.todo("should call  TelefoneValidador with correct telefone");
+    test("should return 400 if an invalid cpf is provided", async () => {
+        const { sysUnderTest, cpfValidadorStub } = makeSysUnderTest();
+
+        jest.spyOn(cpfValidadorStub, "validar").mockReturnValueOnce(false);
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "any@email.com",
+                cpf: "invalid_cpf",
+                telefone: "00000000",
+                data_nascimento: "00/00/0000",
+            },
+        };
+        const httpResponse = await sysUnderTest.handle(httpRequest);
+        expect(httpResponse.statusCode).toBe(400);
+        expect(httpResponse.body).toEqual(new MissingParamError("cpf"));
+    });
+    it.todo("should call EmailValidador with correct cpf");
+    it.todo("should call EmailValidador with correct email");
+    it.todo("should call DataNascimentoValidador with correct dataNascimento");
+    it.todo("should call TelefoneValidador with correct telefone");
 });
