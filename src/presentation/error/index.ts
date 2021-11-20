@@ -1,1 +1,2 @@
-export * from "./MissingParamErro";
+export * from "./ParamentroAusenteError";
+export * from "./ParamentroInvalidoError";

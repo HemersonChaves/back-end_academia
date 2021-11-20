@@ -1,4 +1,7 @@
-import { MissingParamError } from "@/presentation/error";
+import {
+    ParamentroAusenteError,
+    ParamentroInvalidoError,
+} from "@/presentation/error";
 import { IHttpRequest, IHttpResponse } from "@/presentation/protocols";
 import { IController } from "@/presentation/protocols/IController";
 import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
@@ -25,14 +28,16 @@ class CadastroClienteController implements IController {
         for (const field of requireFields) {
             if (!httpRequest.body[field]) {
                 return Promise.resolve(
-                    badRequest(new MissingParamError(field))
+                    badRequest(new ParamentroAusenteError(field))
                 );
             }
         }
         const { cpf } = httpRequest.body.cpf;
         const validado = this.cpfValidador.validar(cpf);
         if (!validado) {
-            return Promise.resolve(badRequest(new MissingParamError("cpf")));
+            return Promise.resolve(
+                badRequest(new ParamentroInvalidoError("cpf"))
+            );
         }
         return Promise.resolve({
             statusCode: 200,
