@@ -87,4 +87,8 @@ describe("Cadastro Cliente Controller", () => {
             new MissingParamError("data_nascimento")
         );
     });
+    it.todo("should call  CpfValidador with correct cpf");
+    it.todo("should call  EmailValidador with correct email");
+    it.todo("should call  DataNascimentoValidador with correct dataNascimento");
+    it.todo("should call  TelefoneValidador with correct telefone");
 });
