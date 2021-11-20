@@ -1,6 +1,7 @@
+import { ParamentroInvalidoError } from "@/presentation/error";
 import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
 
-import { MissingParamError } from "../../error/MissingParamErro";
+import { ParamentroAusenteError } from "../../error/ParamentroAusenteError";
 import { CadastroClienteController } from "./CadastroClienteController";
 
 interface ISutTypes {
@@ -32,7 +33,7 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new MissingParamError("name"));
+        expect(httpResponse.body).toEqual(new ParamentroAusenteError("name"));
     });
     test("should return 400 if no email is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
@@ -47,7 +48,7 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new MissingParamError("email"));
+        expect(httpResponse.body).toEqual(new ParamentroAusenteError("email"));
     });
     test("should return 400 if no cpf is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
@@ -62,7 +63,7 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new MissingParamError("cpf"));
+        expect(httpResponse.body).toEqual(new ParamentroAusenteError("cpf"));
     });
     test("should return 400 if no telefone is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
@@ -77,7 +78,9 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new MissingParamError("telefone"));
+        expect(httpResponse.body).toEqual(
+            new ParamentroAusenteError("telefone")
+        );
     });
     test("should return 400 if no data_nascimento is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
@@ -93,7 +96,7 @@ describe("Cadastro Cliente Controller", () => {
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
         expect(httpResponse.body).toEqual(
-            new MissingParamError("data_nascimento")
+            new ParamentroAusenteError("data_nascimento")
         );
     });
     test("should return 400 if an invalid cpf is provided", async () => {
@@ -111,7 +114,7 @@ describe("Cadastro Cliente Controller", () => {
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new MissingParamError("cpf"));
+        expect(httpResponse.body).toEqual(new ParamentroInvalidoError("cpf"));
     });
     it.todo("should call EmailValidador with correct cpf");
     it.todo("should call EmailValidador with correct email");
