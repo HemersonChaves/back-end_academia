@@ -1,3 +1,5 @@
+import { cpf } from "cpf-cnpj-validator";
+
 import { CpfValidador } from "./CpfValidador";
 
 describe("Cpf Validador", () => {
@@ -20,5 +22,9 @@ describe("Cpf Validador", () => {
         expect(sysUnderTest.validar("99999999999")).toBeFalsy();
         expect(sysUnderTest.validar("12345678909")).toBeFalsy();
     });
-    it.todo("should call cpf with correct cpf");
+    test("should call cpf with correct cpf", () => {
+        const sysUnderTest = new CpfValidador();
+        const cpfValido = cpf.generate();
+        expect(sysUnderTest.validar(cpfValido)).toBeTruthy();
+    });
 });
