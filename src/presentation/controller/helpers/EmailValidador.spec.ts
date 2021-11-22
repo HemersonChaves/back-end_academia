@@ -12,5 +12,9 @@ describe("Email CpfValidador", () => {
         ).toBeFalsy();
         expect(sysUnderTest.Validar("emailinvalido@com")).toBeFalsy();
     });
-    it.todo("should call cpf with correct email");
+    test("should call cpf with correct email", () => {
+        const sysUnderTest = new EmailValidador();
+        const emailValido = "any_email@mail.com";
+        expect(sysUnderTest.Validar(emailValido)).toBeTruthy();
+    });
 });
