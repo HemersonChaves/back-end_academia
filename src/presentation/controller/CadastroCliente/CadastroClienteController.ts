@@ -4,16 +4,14 @@ import {
 } from "@/presentation/error";
 import { IHttpRequest, IHttpResponse } from "@/presentation/protocols";
 import { IController } from "@/presentation/protocols/IController";
-import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
 
-// import { CpfValidador } from "../helpers/CpfValidador";
-
+import { CpfValidador } from "../helpers/CpfValidador";
 import { badRequest } from "../helpers/http-helper";
 
 class CadastroClienteController implements IController {
-    private readonly cpfValidador: ICpfValidador;
+    private readonly cpfValidador: CpfValidador;
 
-    constructor(cpfValidador: ICpfValidador) {
+    constructor(cpfValidador: CpfValidador) {
         this.cpfValidador = cpfValidador;
     }
 
@@ -33,7 +31,7 @@ class CadastroClienteController implements IController {
             }
         }
         const { cpf } = httpRequest.body.cpf;
-        const validado = this.cpfValidador.validar(cpf);
+        const validado = this.cpfValidador.Validar(cpf);
         if (!validado) {
             return Promise.resolve(
                 badRequest(new ParamentroInvalidoError("cpf"))

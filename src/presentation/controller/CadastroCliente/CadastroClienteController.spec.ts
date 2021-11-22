@@ -1,16 +1,17 @@
 import { ParamentroInvalidoError } from "@/presentation/error";
-import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
+import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamentro";
 
 import { ParamentroAusenteError } from "../../error/ParamentroAusenteError";
+import { CpfValidador } from "../helpers/CpfValidador";
 import { CadastroClienteController } from "./CadastroClienteController";
 
 interface ISutTypes {
     sysUnderTest: CadastroClienteController;
-    cpfValidadorStub: ICpfValidador;
+    cpfValidadorStub: IValidadorParamentro;
 }
 const makeSysUnderTest = (): ISutTypes => {
-    class CpfValidadorStub implements ICpfValidador {
-        validar(cpf: string): boolean {
+    class CpfValidadorStub implements CpfValidador {
+        Validar(cpf: string): boolean {
             return true;
         }
     }
@@ -102,7 +103,7 @@ describe("Cadastro Cliente Controller", () => {
     test("should return 400 if an invalid cpf is provided", async () => {
         const { sysUnderTest, cpfValidadorStub } = makeSysUnderTest();
 
-        jest.spyOn(cpfValidadorStub, "validar").mockReturnValueOnce(false);
+        jest.spyOn(cpfValidadorStub, "Validar").mockReturnValueOnce(false);
         const httpRequest = {
             body: {
                 name: "any name",

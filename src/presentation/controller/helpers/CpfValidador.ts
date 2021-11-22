@@ -1,8 +1,8 @@
 import { cpf } from "cpf-cnpj-validator";
-import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
+import { IValidadorParamentro } from "@/presentation/protocols";
 
-class CpfValidador implements ICpfValidador {
-    validar(_cpf: string) {
+class CpfValidador implements IValidadorParamentro {
+    Validar(_cpf: string) {
         if (_cpf === null || undefined === _cpf) {
             return false;
         }
