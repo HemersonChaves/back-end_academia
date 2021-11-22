@@ -2,11 +2,7 @@ import { cpf } from "cpf-cnpj-validator";
 import { IValidadorParamentro } from "@/presentation/protocols";
 
 class CpfValidador implements IValidadorParamentro {
-    Validar(_cpf: string) {
-        if (_cpf === null || undefined === _cpf) {
-            return false;
-        }
-
+    Validar(_cpf: string): boolean {
         const cpfValido = _cpf
             .replace(".", "")
             .replace(".", "")
