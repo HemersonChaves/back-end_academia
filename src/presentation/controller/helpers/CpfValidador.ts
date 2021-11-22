@@ -1,12 +1,13 @@
+import { cpf } from "cpf-cnpj-validator";
 import { ICpfValidador } from "@/presentation/protocols/ICpfValidador";
 
 class CpfValidador implements ICpfValidador {
-    validar(cpf: string) {
-        if (cpf === null || undefined === cpf) {
+    validar(_cpf: string) {
+        if (_cpf === null || undefined === _cpf) {
             return false;
         }
 
-        const cpfValido = cpf
+        const cpfValido = _cpf
             .replace(".", "")
             .replace(".", "")
             .replace("-", "");
@@ -14,7 +15,8 @@ class CpfValidador implements ICpfValidador {
         if (cpfValido.length !== 11) {
             return false;
         }
-        return true;
+
+        return cpf.isValid(cpfValido);
     }
 }
 export { CpfValidador };
