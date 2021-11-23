@@ -6,13 +6,16 @@ import { IHttpRequest, IHttpResponse } from "@/presentation/protocols";
 import { IController } from "@/presentation/protocols/IController";
 
 import { CpfValidador } from "../helpers/CpfValidador";
+import { EmailValidador } from "../helpers/EmailValidador";
 import { badRequest } from "../helpers/http-helper";
 
 class CadastroClienteController implements IController {
     private readonly cpfValidador: CpfValidador;
+    private readonly emailValidador: EmailValidador;
 
-    constructor(cpfValidador: CpfValidador) {
+    constructor(cpfValidador: CpfValidador, emailValidador: EmailValidador) {
         this.cpfValidador = cpfValidador;
+        this.emailValidador = emailValidador;
     }
 
     handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
@@ -30,12 +33,17 @@ class CadastroClienteController implements IController {
                 );
             }
         }
-        const { cpf } = httpRequest.body;
-        console.log(cpf);
-        const validado = this.cpfValidador.Validar(cpf);
-        if (!validado) {
+        const { cpf, email } = httpRequest.body;
+        const cpfValidado = this.cpfValidador.Validar(cpf);
+        if (!cpfValidado) {
             return Promise.resolve(
                 badRequest(new ParamentroInvalidoError("cpf"))
+            );
+        }
+        const emailValidado = this.emailValidador.Validar(email);
+        if (!emailValidado) {
+            return Promise.resolve(
+                badRequest(new ParamentroInvalidoError("email"))
             );
         }
         return Promise.resolve({
