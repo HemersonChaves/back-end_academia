@@ -1,3 +1,4 @@
+import { cpf } from "cpf-cnpj-validator";
 import { ParamentroInvalidoError } from "@/presentation/error";
 import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamentro";
 
@@ -117,7 +118,22 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.statusCode).toBe(400);
         expect(httpResponse.body).toEqual(new ParamentroInvalidoError("cpf"));
     });
-    it.todo("should call EmailValidador with correct cpf");
+    test("should call CpfValidador with correct cpf", async () => {
+        const { sysUnderTest, cpfValidadorStub } = makeSysUnderTest();
+        const isValidSpy = jest.spyOn(cpfValidadorStub, "Validar");
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "any@email.com",
+                cpf: "10011460423",
+                telefone: "00000000",
+                data_nascimento: "00/00/0000",
+            },
+        };
+        await sysUnderTest.handle(httpRequest);
+        expect(cpfValidadorStub.Validar).toHaveBeenCalledTimes(1);
+        expect(isValidSpy).toHaveBeenCalledWith("10011460423");
+    });
     it.todo("should call EmailValidador with correct email");
     it.todo("should call DataNascimentoValidador with correct dataNascimento");
     it.todo("should call TelefoneValidador with correct telefone");
