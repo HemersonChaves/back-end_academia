@@ -1,24 +1,43 @@
+/* eslint-disable max-classes-per-file */
 import { cpf } from "cpf-cnpj-validator";
 import { ParamentroInvalidoError } from "@/presentation/error";
 import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamentro";
 
 import { ParamentroAusenteError } from "../../error/ParamentroAusenteError";
 import { CpfValidador } from "../helpers/CpfValidador";
+import { EmailValidador } from "../helpers/EmailValidador";
 import { CadastroClienteController } from "./CadastroClienteController";
 
 interface ISutTypes {
     sysUnderTest: CadastroClienteController;
     cpfValidadorStub: IValidadorParamentro;
+    emailValidadorStub: IValidadorParamentro;
 }
-const makeSysUnderTest = (): ISutTypes => {
+const makeEmailValidator = (): IValidadorParamentro => {
+    class EmailValidatorStub implements EmailValidador {
+        Validar(email: string): boolean {
+            return true;
+        }
+    }
+    return new EmailValidatorStub();
+};
+
+const makerValidadorCpf = (): IValidadorParamentro => {
     class CpfValidadorStub implements CpfValidador {
         Validar(cpf: string): boolean {
             return true;
         }
     }
-    const cpfValidadorStub = new CpfValidadorStub();
-    const sysUnderTest = new CadastroClienteController(cpfValidadorStub);
-    return { sysUnderTest, cpfValidadorStub };
+    return new CpfValidadorStub();
+};
+const makeSysUnderTest = (): ISutTypes => {
+    const cpfValidadorStub = makerValidadorCpf();
+    const emailValidadorStub = makeEmailValidator();
+    const sysUnderTest = new CadastroClienteController(
+        cpfValidadorStub,
+        emailValidadorStub
+    );
+    return { sysUnderTest, cpfValidadorStub, emailValidadorStub };
 };
 
 describe("Cadastro Cliente Controller", () => {
@@ -134,7 +153,22 @@ describe("Cadastro Cliente Controller", () => {
         expect(cpfValidadorStub.Validar).toHaveBeenCalledTimes(1);
         expect(isValidSpy).toHaveBeenCalledWith("10011460423");
     });
-    it.todo("should call EmailValidador with correct email");
+    test("should call EmailValidador with correct email", async () => {
+        const { sysUnderTest, emailValidadorStub } = makeSysUnderTest();
+        const isValidSpy = jest.spyOn(emailValidadorStub, "Validar");
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "correct@email.com",
+                cpf: "10011460423",
+                telefone: "00000000",
+                data_nascimento: "00/00/0000",
+            },
+        };
+        await sysUnderTest.handle(httpRequest);
+        expect(emailValidadorStub.Validar).toHaveBeenCalledTimes(1);
+        expect(isValidSpy).toHaveBeenCalledWith("correct@email.com");
+    });
     it.todo("should call DataNascimentoValidador with correct dataNascimento");
     it.todo("should call TelefoneValidador with correct telefone");
 });
