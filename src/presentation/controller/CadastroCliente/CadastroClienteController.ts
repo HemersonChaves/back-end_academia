@@ -30,7 +30,8 @@ class CadastroClienteController implements IController {
                 );
             }
         }
-        const { cpf } = httpRequest.body.cpf;
+        const { cpf } = httpRequest.body;
+        console.log(cpf);
         const validado = this.cpfValidador.Validar(cpf);
         if (!validado) {
             return Promise.resolve(
