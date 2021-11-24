@@ -5,6 +5,7 @@ import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamen
 
 import { ParamentroAusenteError } from "../../error/ParamentroAusenteError";
 import { CpfValidador } from "../helpers/CpfValidador";
+import { DataValidador } from "../helpers/DataValidador";
 import { EmailValidador } from "../helpers/EmailValidador";
 import { CadastroClienteController } from "./CadastroClienteController";
 
@@ -12,8 +13,17 @@ interface ISutTypes {
     sysUnderTest: CadastroClienteController;
     cpfValidadorStub: IValidadorParamentro;
     emailValidadorStub: IValidadorParamentro;
+    dataValidadorStub: IValidadorParamentro;
 }
-const makeEmailValidator = (): IValidadorParamentro => {
+const makeDataValidador = (): IValidadorParamentro => {
+    class EmailValidatorStub implements DataValidador {
+        Validar(email: string): boolean {
+            return true;
+        }
+    }
+    return new EmailValidatorStub();
+};
+const makeEmailValidador = (): IValidadorParamentro => {
     class EmailValidatorStub implements EmailValidador {
         Validar(email: string): boolean {
             return true;
@@ -32,12 +42,19 @@ const makerValidadorCpf = (): IValidadorParamentro => {
 };
 const makeSysUnderTest = (): ISutTypes => {
     const cpfValidadorStub = makerValidadorCpf();
-    const emailValidadorStub = makeEmailValidator();
+    const emailValidadorStub = makeEmailValidador();
+    const dataValidadorStub = makeDataValidador();
     const sysUnderTest = new CadastroClienteController(
         cpfValidadorStub,
-        emailValidadorStub
+        emailValidadorStub,
+        dataValidadorStub
     );
-    return { sysUnderTest, cpfValidadorStub, emailValidadorStub };
+    return {
+        sysUnderTest,
+        cpfValidadorStub,
+        emailValidadorStub,
+        dataValidadorStub,
+    };
 };
 
 describe("Cadastro Cliente Controller", () => {
@@ -207,6 +224,21 @@ describe("Cadastro Cliente Controller", () => {
         expect(httpResponse.statusCode).toBe(500);
         expect(httpResponse.body).toEqual(new ServerError());
     });
-    it.todo("should call DataNascimentoValidador with correct dataNascimento");
+    test("should call DataNascimentoValidador with correct dataNascimento", async () => {
+        const { sysUnderTest, dataValidadorStub } = makeSysUnderTest();
+        const isValidSpy = jest.spyOn(dataValidadorStub, "Validar");
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "any@email.com",
+                cpf: "10011460423",
+                telefone: "00000000",
+                data_nascimento: "11/11/2021",
+            },
+        };
+        await sysUnderTest.handle(httpRequest);
+        expect(dataValidadorStub.Validar).toHaveBeenCalledTimes(1);
+        expect(isValidSpy).toHaveBeenCalledWith("11/11/2021");
+    });
     it.todo("should call TelefoneValidador with correct telefone");
 });
