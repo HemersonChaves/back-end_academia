@@ -7,7 +7,7 @@ import { IController } from "@/presentation/protocols/IController";
 
 import { CpfValidador } from "../helpers/CpfValidador";
 import { EmailValidador } from "../helpers/EmailValidador";
-import { badRequest } from "../helpers/http-helper";
+import { badRequest, serverError } from "../helpers/http-helper";
 
 class CadastroClienteController implements IController {
     private readonly cpfValidador: CpfValidador;
@@ -19,37 +19,41 @@ class CadastroClienteController implements IController {
     }
 
     handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-        const requireFields = [
-            "name",
-            "email",
-            "cpf",
-            "telefone",
-            "data_nascimento",
-        ];
-        for (const field of requireFields) {
-            if (!httpRequest.body[field]) {
+        try {
+            const requireFields = [
+                "name",
+                "email",
+                "cpf",
+                "telefone",
+                "data_nascimento",
+            ];
+            for (const field of requireFields) {
+                if (!httpRequest.body[field]) {
+                    return Promise.resolve(
+                        badRequest(new ParamentroAusenteError(field))
+                    );
+                }
+            }
+            const { cpf, email } = httpRequest.body;
+            const cpfValidado = this.cpfValidador.Validar(cpf);
+            if (!cpfValidado) {
                 return Promise.resolve(
-                    badRequest(new ParamentroAusenteError(field))
+                    badRequest(new ParamentroInvalidoError("cpf"))
                 );
             }
+            const emailValidado = this.emailValidador.Validar(email);
+            if (!emailValidado) {
+                return Promise.resolve(
+                    badRequest(new ParamentroInvalidoError("email"))
+                );
+            }
+            return Promise.resolve({
+                statusCode: 200,
+                body: "",
+            });
+        } catch (error) {
+            return Promise.resolve(serverError());
         }
-        const { cpf, email } = httpRequest.body;
-        const cpfValidado = this.cpfValidador.Validar(cpf);
-        if (!cpfValidado) {
-            return Promise.resolve(
-                badRequest(new ParamentroInvalidoError("cpf"))
-            );
-        }
-        const emailValidado = this.emailValidador.Validar(email);
-        if (!emailValidado) {
-            return Promise.resolve(
-                badRequest(new ParamentroInvalidoError("email"))
-            );
-        }
-        return Promise.resolve({
-            statusCode: 200,
-            body: "",
-        });
     }
 }
 export { CadastroClienteController };
