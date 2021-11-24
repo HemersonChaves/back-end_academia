@@ -153,6 +153,25 @@ describe("Cadastro Cliente Controller", () => {
         expect(cpfValidadorStub.Validar).toHaveBeenCalledTimes(1);
         expect(isValidSpy).toHaveBeenCalledWith("10011460423");
     });
+    test("should return 500 if CpfValidador throws", async () => {
+        const { sysUnderTest, cpfValidadorStub } = makeSysUnderTest();
+
+        jest.spyOn(cpfValidadorStub, "Validar").mockImplementationOnce(() => {
+            throw new Error();
+        });
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "correct@email.com",
+                cpf: "10011460423",
+                telefone: "00000000",
+                data_nascimento: "00/00/0000",
+            },
+        };
+        const httpResponse = await sysUnderTest.handle(httpRequest);
+        expect(httpResponse.statusCode).toBe(500);
+        expect(httpResponse.body).toEqual(new ServerError());
+    });
     test("should call EmailValidador with correct email", async () => {
         const { sysUnderTest, emailValidadorStub } = makeSysUnderTest();
         const isValidSpy = jest.spyOn(emailValidadorStub, "Validar");
