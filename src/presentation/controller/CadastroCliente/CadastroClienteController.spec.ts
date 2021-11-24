@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { cpf } from "cpf-cnpj-validator";
-import { ParamentroInvalidoError } from "@/presentation/error";
+import { ParamentroInvalidoError, ServerError } from "@/presentation/error";
 import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamentro";
 
 import { ParamentroAusenteError } from "../../error/ParamentroAusenteError";
@@ -168,6 +168,25 @@ describe("Cadastro Cliente Controller", () => {
         await sysUnderTest.handle(httpRequest);
         expect(emailValidadorStub.Validar).toHaveBeenCalledTimes(1);
         expect(isValidSpy).toHaveBeenCalledWith("correct@email.com");
+    });
+    test("should return 500 if EmailValidador throws", async () => {
+        const { sysUnderTest, emailValidadorStub } = makeSysUnderTest();
+
+        jest.spyOn(emailValidadorStub, "Validar").mockImplementationOnce(() => {
+            throw new Error();
+        });
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "correct@email.com",
+                cpf: "10011460423",
+                telefone: "00000000",
+                data_nascimento: "00/00/0000",
+            },
+        };
+        const httpResponse = await sysUnderTest.handle(httpRequest);
+        expect(httpResponse.statusCode).toBe(500);
+        expect(httpResponse.body).toEqual(new ServerError());
     });
     it.todo("should call DataNascimentoValidador with correct dataNascimento");
     it.todo("should call TelefoneValidador with correct telefone");
