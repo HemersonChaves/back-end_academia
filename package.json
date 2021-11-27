@@ -9,6 +9,7 @@
     "@commitlint/cli": "^14.1.0",
     "@commitlint/config-conventional": "^14.1.0",
     "@types/jest": "^27.0.2",
+    "@types/yup": "^0.29.13",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "commitizen": "^4.2.4",
@@ -43,6 +44,7 @@
     }
   },
   "dependencies": {
-    "cpf-cnpj-validator": "^1.0.3"
+    "cpf-cnpj-validator": "^1.0.3",
+    "yup": "^0.32.11"
   }
 }
