@@ -4,13 +4,11 @@ import {
 } from "@/presentation/error";
 import { IHttpRequest, IHttpResponse } from "@/presentation/protocols";
 import { IController } from "@/presentation/protocols/IController";
+import { CpfValidador, DataValidador, EmailValidador } from "@/utils";
 
-import { CpfValidador } from "../helpers/CpfValidador";
-import { DataValidador } from "../helpers/DataValidador";
-import { EmailValidador } from "../helpers/EmailValidador";
 import { badRequest, serverError } from "../helpers/http-helper";
 /**
- * Fornece métodos que respondem às solicitações HTTP
+ * Fornece métodos que respondem às solicitações HTTP de cadastro de cliente
  */
 class CadastroClienteController implements IController {
     private readonly cpfValidador: CpfValidador;
@@ -29,7 +27,7 @@ class CadastroClienteController implements IController {
     /**
      * Lidas com as requisições (request) http
      *
-     * @param httpRequest objeto com paramentros http
+     * @param httpRequest objeto com paramentros (name, email, cpf, telefone, data_nascimento)
      * @returns IHttpResponse objeto com a respostas http
      */
     handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {

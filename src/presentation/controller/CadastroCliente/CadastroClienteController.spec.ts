@@ -1,12 +1,9 @@
 /* eslint-disable max-classes-per-file */
-import { cpf } from "cpf-cnpj-validator";
 import { ParamentroInvalidoError, ServerError } from "@/presentation/error";
 import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamentro";
+import { CpfValidador, DataValidador, EmailValidador } from "@/utils";
 
 import { ParamentroAusenteError } from "../../error/ParamentroAusenteError";
-import { CpfValidador } from "../helpers/CpfValidador";
-import { DataValidador } from "../helpers/DataValidador";
-import { EmailValidador } from "../helpers/EmailValidador";
 import { CadastroClienteController } from "./CadastroClienteController";
 
 interface ISutTypes {
