@@ -30,8 +30,12 @@
   "scripts": {
     "prepare": "husky install",
     "commit": "git-cz",
-    "test": "jest --silent --noStackTrace",
-    "test:unit": "yarn test -- --watch"
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test:verbose": "jest --passWithNoTests --runInBand",
+    "test:integration": "yarn test --watch -c jest-integration-config.ts",
+    "test:unit": "yarn test --watch --config jest-unit-config.ts",
+    "test:staged": "yarn test --findRelatedTests",
+    "test:ci": "yarn test --coverage"
   },
   "config": {
     "commitizen": {
