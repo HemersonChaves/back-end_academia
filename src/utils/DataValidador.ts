@@ -1,12 +1,12 @@
-import { IValidadorParamentro } from "@/presentation/protocols";
+import * as yup from "yup";
 
-class DataValidador implements IValidadorParamentro {
-    Validar(data: string): boolean {
-        const dataValido = data;
-
-        // if (new Date(data) !== "Invalid Date") {
-        return false;
-        // }
+class DataValidador {
+    async Validar(data: string): Promise<boolean> {
+        const dataSchema = yup.object().shape({
+            data: yup.date(),
+        });
+        const a = await dataSchema.isValid(data);
+        return a;
     }
 }
 export { DataValidador };
