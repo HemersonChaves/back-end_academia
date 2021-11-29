@@ -31,10 +31,11 @@
     "ts-jest": "^27.0.7",
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "start:dev": "ts-node-dev --inspect=0.0.0.0:9229 --poll --transpile-only --ignore-watch node_modules --respawn src/server.ts",
+    "start:dev": "ts-node-dev -r tsconfig-paths/register --inspect=0.0.0.0:9229 --poll --transpile-only --ignore-watch node_modules --respawn src/server.ts",
     "prepare": "husky install",
     "commit": "git-cz",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
