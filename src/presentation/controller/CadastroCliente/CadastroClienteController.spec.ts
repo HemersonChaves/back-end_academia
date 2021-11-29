@@ -10,15 +10,15 @@ interface ISutTypes {
     sysUnderTest: CadastroClienteController;
     cpfValidadorStub: IValidadorParamentro;
     emailValidadorStub: IValidadorParamentro;
-    dataValidadorStub: IValidadorParamentro;
+    dataValidadorStub: DataValidador;
 }
-const makeDataValidador = (): IValidadorParamentro => {
-    class EmailValidatorStub implements DataValidador {
-        Validar(email: string): boolean {
+const makeDataValidador = (): DataValidador => {
+    class DataValidatorStub implements DataValidador {
+        async Validar(data: string): Promise<boolean> {
             return true;
         }
     }
-    return new EmailValidatorStub();
+    return new DataValidatorStub();
 };
 const makeEmailValidador = (): IValidadorParamentro => {
     class EmailValidatorStub implements EmailValidador {
@@ -28,7 +28,6 @@ const makeEmailValidador = (): IValidadorParamentro => {
     }
     return new EmailValidatorStub();
 };
-
 const makerValidadorCpf = (): IValidadorParamentro => {
     class CpfValidadorStub implements CpfValidador {
         Validar(cpf: string): boolean {
@@ -236,6 +235,25 @@ describe("Cadastro Cliente Controller", () => {
         await sysUnderTest.handle(httpRequest);
         expect(dataValidadorStub.Validar).toHaveBeenCalledTimes(1);
         expect(isValidSpy).toHaveBeenCalledWith("11/11/2021");
+    });
+    test("should return 500 if DataValidador throws", async () => {
+        const { sysUnderTest, dataValidadorStub } = makeSysUnderTest();
+
+        jest.spyOn(dataValidadorStub, "Validar").mockImplementationOnce(() => {
+            throw new Error();
+        });
+        const httpRequest = {
+            body: {
+                name: "any name",
+                email: "correct@email.com",
+                cpf: "10011460423",
+                telefone: "00000000",
+                data_nascimento: "00/00/0000",
+            },
+        };
+        const httpResponse = await sysUnderTest.handle(httpRequest);
+        expect(httpResponse.statusCode).toBe(500);
+        expect(httpResponse.body).toEqual(new ServerError());
     });
     it.todo("should call TelefoneValidador with correct telefone");
 });
