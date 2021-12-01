@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { ParamentroInvalidoError, ServerError } from "@/presentation/error";
+import { IHttpRequest } from "@/presentation/protocols";
 import { IValidadorParamentro } from "@/presentation/protocols/IValidadorParamentro";
 import { CpfValidador, DataValidador, EmailValidador } from "@/utils";
 
@@ -56,14 +57,12 @@ const makeSysUnderTest = (): ISutTypes => {
 describe("Cadastro Cliente Controller", () => {
     test("should return 400 if no name is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
-        const httpRequest = {
-            body: {
-                // no name
-                email: "any@email.com",
-                cpf: "00000000000",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            // no name
+            email: "any@email.com",
+            cpf: "00000000000",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
@@ -71,14 +70,12 @@ describe("Cadastro Cliente Controller", () => {
     });
     test("should return 400 if no email is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
-        const httpRequest = {
-            body: {
-                name: "any name",
-                // no email
-                cpf: "00000000000",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            // no email
+            cpf: "00000000000",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
@@ -86,14 +83,12 @@ describe("Cadastro Cliente Controller", () => {
     });
     test("should return 400 if no cpf is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "any@email.com",
-                // no cpf
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "any@email.com",
+            // no cpf
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
@@ -101,14 +96,12 @@ describe("Cadastro Cliente Controller", () => {
     });
     test("should return 400 if no telefone is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "any@email.com",
-                cpf: "00000000000",
-                // telefone
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "any@email.com",
+            cpf: "00000000000",
+            // telefone
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
@@ -118,14 +111,12 @@ describe("Cadastro Cliente Controller", () => {
     });
     test("should return 400 if no data_nascimento is provided", async () => {
         const { sysUnderTest } = makeSysUnderTest();
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "any@email.com",
-                cpf: "00000000000",
-                telefone: "00000000",
-                // data_nascimento
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "any@email.com",
+            cpf: "00000000000",
+            telefone: "00000000",
+            // data_nascimento
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
@@ -137,14 +128,12 @@ describe("Cadastro Cliente Controller", () => {
         const { sysUnderTest, cpfValidadorStub } = makeSysUnderTest();
 
         jest.spyOn(cpfValidadorStub, "Validar").mockReturnValueOnce(false);
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "any@email.com",
-                cpf: "invalid_cpf",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "any@email.com",
+            cpf: "invalid_cpf",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
@@ -153,14 +142,12 @@ describe("Cadastro Cliente Controller", () => {
     test("should call CpfValidador with correct cpf", async () => {
         const { sysUnderTest, cpfValidadorStub } = makeSysUnderTest();
         const isValidSpy = jest.spyOn(cpfValidadorStub, "Validar");
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "any@email.com",
-                cpf: "10011460423",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "any@email.com",
+            cpf: "10011460423",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         await sysUnderTest.handle(httpRequest);
         expect(cpfValidadorStub.Validar).toHaveBeenCalledTimes(1);
@@ -172,14 +159,12 @@ describe("Cadastro Cliente Controller", () => {
         jest.spyOn(cpfValidadorStub, "Validar").mockImplementationOnce(() => {
             throw new Error();
         });
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "correct@email.com",
-                cpf: "10011460423",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "correct@email.com",
+            cpf: "10011460423",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(500);
@@ -188,14 +173,12 @@ describe("Cadastro Cliente Controller", () => {
     test("should call EmailValidador with correct email", async () => {
         const { sysUnderTest, emailValidadorStub } = makeSysUnderTest();
         const isValidSpy = jest.spyOn(emailValidadorStub, "Validar");
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "correct@email.com",
-                cpf: "10011460423",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "correct@email.com",
+            cpf: "10011460423",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         await sysUnderTest.handle(httpRequest);
         expect(emailValidadorStub.Validar).toHaveBeenCalledTimes(1);
@@ -207,14 +190,12 @@ describe("Cadastro Cliente Controller", () => {
         jest.spyOn(emailValidadorStub, "Validar").mockImplementationOnce(() => {
             throw new Error();
         });
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "correct@email.com",
-                cpf: "10011460423",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "correct@email.com",
+            cpf: "10011460423",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(500);
@@ -223,14 +204,12 @@ describe("Cadastro Cliente Controller", () => {
     test("should call DataNascimentoValidador with correct dataNascimento", async () => {
         const { sysUnderTest, dataValidadorStub } = makeSysUnderTest();
         const isValidSpy = jest.spyOn(dataValidadorStub, "Validar");
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "any@email.com",
-                cpf: "10011460423",
-                telefone: "00000000",
-                data_nascimento: "11/11/2021",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "any@email.com",
+            cpf: "10011460423",
+            telefone: "00000000",
+            data_nascimento: "11/11/2021",
         };
         await sysUnderTest.handle(httpRequest);
         expect(dataValidadorStub.Validar).toHaveBeenCalledTimes(1);
@@ -242,14 +221,12 @@ describe("Cadastro Cliente Controller", () => {
         jest.spyOn(dataValidadorStub, "Validar").mockImplementationOnce(() => {
             throw new Error();
         });
-        const httpRequest = {
-            body: {
-                name: "any name",
-                email: "correct@email.com",
-                cpf: "10011460423",
-                telefone: "00000000",
-                data_nascimento: "00/00/0000",
-            },
+        const httpRequest = <IHttpRequest>{
+            name: "any name",
+            email: "correct@email.com",
+            cpf: "10011460423",
+            telefone: "00000000",
+            data_nascimento: "00/00/0000",
         };
         const httpResponse = await sysUnderTest.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(500);
