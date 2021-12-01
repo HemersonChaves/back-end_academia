@@ -7,6 +7,15 @@ import { IController } from "@/presentation/protocols/IController";
 import { CpfValidador, DataValidador, EmailValidador } from "@/utils";
 
 import { badRequest, serverError } from "../helpers/http-helper";
+
+interface IDadosCadastroCliente {
+    name: string;
+    email: string;
+    cpf: string;
+    telefone: string;
+    data_nascimento: string;
+}
+
 /**
  * Fornece métodos que respondem às solicitações HTTP de cadastro de cliente
  */
@@ -25,12 +34,12 @@ class CadastroClienteController implements IController {
         this.dataValidador = dataValidador;
     }
     /**
-     * Lidas com as requisições (request) http
+     * Lida com as requisições (request) http
      *
      * @param httpRequest objeto com paramentros (name, email, cpf, telefone, data_nascimento)
      * @returns IHttpResponse objeto com a respostas http
      */
-    handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
+    async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
         try {
             const requireFields = [
                 "name",
@@ -39,30 +48,35 @@ class CadastroClienteController implements IController {
                 "telefone",
                 "data_nascimento",
             ];
+
             for (const field of requireFields) {
-                if (!httpRequest.body[field]) {
+                console.log(field);
+                if (!(field in httpRequest)) {
                     return Promise.resolve(
                         badRequest(new ParamentroAusenteError(field))
                     );
                 }
             }
-            const { cpf, email, data_nascimento } = httpRequest.body;
+
+            const { cpf, email, data_nascimento } = <IDadosCadastroCliente>(
+                httpRequest
+            );
+            console.log(cpf);
             const cpfValido = this.cpfValidador.Validar(cpf);
             if (!cpfValido) {
-                return Promise.resolve(
-                    badRequest(new ParamentroInvalidoError("cpf"))
-                );
+                console.log("cpf_");
+                return await badRequest(new ParamentroInvalidoError("cpf"));
             }
             const emailValido = this.emailValidador.Validar(email);
             if (!emailValido) {
-                return Promise.resolve(
-                    badRequest(new ParamentroInvalidoError("email"))
-                );
+                console.log("{email_}");
+                return await badRequest(new ParamentroInvalidoError("email"));
             }
             const dataValida = this.dataValidador.Validar(data_nascimento);
             if (!dataValida) {
-                return Promise.resolve(
-                    badRequest(new ParamentroInvalidoError("data_nascimento"))
+                console.log("data_nascimento_");
+                return await badRequest(
+                    new ParamentroInvalidoError("data_nascimento")
                 );
             }
             return Promise.resolve({
@@ -70,8 +84,9 @@ class CadastroClienteController implements IController {
                 body: "",
             });
         } catch (error) {
+            console.log("catch");
             return Promise.resolve(serverError());
         }
     }
 }
-export { CadastroClienteController };
+export { CadastroClienteController, IDadosCadastroCliente };
