@@ -7,7 +7,6 @@ interface IHttpResponse {
     body: any;
 }
 
-export { IHttpResponse };
 /**
  * interface para requisições dos paramentros do protocolo http
  */
@@ -16,4 +15,4 @@ interface IHttpRequest {
     body?: any;
 }
 
-export { IHttpRequest };
+export { IHttpRequest, IHttpResponse };
