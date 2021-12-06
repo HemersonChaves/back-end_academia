@@ -50,7 +50,6 @@ class CadastroClienteController implements IController {
             ];
 
             for (const field of requireFields) {
-                console.log(field);
                 if (!(field in httpRequest)) {
                     return Promise.resolve(
                         badRequest(new ParamentroAusenteError(field))
@@ -61,20 +60,16 @@ class CadastroClienteController implements IController {
             const { cpf, email, data_nascimento } = <IDadosCadastroCliente>(
                 httpRequest
             );
-            console.log(cpf);
             const cpfValido = this.cpfValidador.Validar(cpf);
             if (!cpfValido) {
-                console.log("cpf_");
                 return await badRequest(new ParamentroInvalidoError("cpf"));
             }
             const emailValido = this.emailValidador.Validar(email);
             if (!emailValido) {
-                console.log("{email_}");
                 return await badRequest(new ParamentroInvalidoError("email"));
             }
             const dataValida = this.dataValidador.Validar(data_nascimento);
             if (!dataValida) {
-                console.log("data_nascimento_");
                 return await badRequest(
                     new ParamentroInvalidoError("data_nascimento")
                 );
@@ -84,7 +79,6 @@ class CadastroClienteController implements IController {
                 body: "",
             });
         } catch (error) {
-            console.log("catch");
             return Promise.resolve(serverError());
         }
     }
