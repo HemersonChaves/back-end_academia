@@ -3,7 +3,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { AdapterRoute } from "./ExpressRouteAdapter";
 
-import { IController, IHttpResponse } from "@/presentation/protocols";
+import {
+    IController,
+    IHttpRequest,
+    IHttpResponse,
+} from "@/presentation/protocols";
+
+import { getMockReq } from "@jest-mock/express";
 
 class ControllerSpy implements IController {
     httpResponse = <IHttpResponse>{
@@ -23,7 +29,20 @@ describe("Adapter Router Express", () => {
         const controllerSpy = new ControllerSpy();
 
         const SysUnderTest = new AdapterRoute(controllerSpy);
-        const exampleProto = Object.getOwnPropertyDescriptors(SysUnderTest);
-        expect(exampleProto.controller.value).toBe(controllerSpy);
+        const sutProperty = Object.getOwnPropertyDescriptors(SysUnderTest);
+        expect(sutProperty.controller.value).toBe(controllerSpy);
+    });
+    test("should conversion of request parameters", () => {
+        const controllerSpy = new ControllerSpy();
+
+        const SysUnderTest = new AdapterRoute(controllerSpy);
+        const request = getMockReq({
+            body: { anyBody: "any_body" },
+        });
+
+        expect(SysUnderTest.condesaParamentros(request)).toEqual({
+            anyBody: "any_body",
+        });
+        // expect(SysUnderTest.handle.).toBe(controllerSpy);
     });
 });
