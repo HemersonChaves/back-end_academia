@@ -31,22 +31,15 @@ export class AdapterRoute {
     ): Promise<Response> {
         const paramentro = this.consolidaParamentro(requestExpress);
         const httpResponse = await this.controller.handle(paramentro);
+        if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
+            responseExpress
+                .status(httpResponse.statusCode)
+                .json(httpResponse.body);
+        } else {
+            responseExpress.status(httpResponse.statusCode).json({
+                error: httpResponse.body.message,
+            });
+        }
         return responseExpress;
     }
-    //     const request = {
-    //         ...(requestExpress.body || {}),
-    //         ...(requestExpress.params || {}),
-    //     };
-    //     const httpResponse = await this.controller.handle(request);
-    //     if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
-    //         responseExpress
-    //             .status(httpResponse.statusCode)
-    //             .json(httpResponse.body);
-    //     } else {
-    //         responseExpress.status(httpResponse.statusCode).json({
-    //             error: httpResponse.body.message,
-    //         });
-    //     }
-    //     return responseExpress;
-    // }
 }
