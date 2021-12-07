@@ -64,4 +64,21 @@ describe("Adapter Router Express", () => {
             body: { data: "any_data" },
         });
     });
+    test("should return null data if  body request null ", async () => {
+        const controllerSpy = new ControllerSpy();
+        jest.spyOn(controllerSpy, "handle").mockResolvedValueOnce({
+            statusCode: 204,
+            body: null,
+        });
+        const SysUnderTest = new AdapterRoute(controllerSpy);
+        const request = getMockReq({
+            data: null,
+        });
+        const response = getMockRes().res;
+        const retorno = await SysUnderTest.handle(request, response);
+        expect(retorno.status).toHaveBeenCalledWith(204);
+        expect(controllerSpy.handle).toHaveBeenCalledTimes(1);
+        expect(retorno.json).toHaveBeenCalledWith(null);
+        expect(retorno.status).toHaveBeenCalledTimes(1);
+    });
 });
