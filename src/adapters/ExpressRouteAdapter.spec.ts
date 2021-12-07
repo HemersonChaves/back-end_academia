@@ -5,7 +5,7 @@ import { AdapterRoute } from "./ExpressRouteAdapter";
 
 import { IController, IHttpResponse } from "@/presentation/protocols";
 
-import { getMockReq } from "@jest-mock/express";
+import { getMockReq, getMockRes } from "@jest-mock/express";
 
 class ControllerSpy implements IController {
     httpResponse = <IHttpResponse>{
@@ -49,23 +49,19 @@ describe("Adapter Router Express", () => {
 
         expect(SysUnderTest.consolidaParamentro(request)).toEqual({});
     });
-    /* test("should garantir que o controller handle seja chamado", () => {
-         const controllerSpy = new ControllerSpy();
- 
-         const SysUnderTest = new AdapterRoute(controllerSpy);
-         const request = getMockReq({
-             body: { anyBody: "any_body" },
-         });
-         expect(SysUnderTest.handle).toEqual({
-             anyBody: "any_body",
-         });
-         let controller: MockProxy<Controller>
-         controller = mock()
-         controller.handle.mockResolvedValue({
-             statusCode: 200,
-             data: { data: 'any_data' }
-         })
-         expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', anyLocals: 'any_locals' })
-         expect(controller.handle).toHaveBeenCalledTimes(1)
-     }); */
+    test("should the controller handle is called", async () => {
+        const controllerSpy = new ControllerSpy();
+
+        const SysUnderTest = new AdapterRoute(controllerSpy);
+        const request = getMockReq({
+            body: { anyBody: "any_body" },
+        });
+        const response = getMockRes().res;
+        const retorno = await SysUnderTest.handle(request, response);
+        expect(retorno).toBe(response);
+        expect(controllerSpy.httpResponse).toEqual({
+            statusCode: 200,
+            body: { data: "any_data" },
+        });
+    });
 });
