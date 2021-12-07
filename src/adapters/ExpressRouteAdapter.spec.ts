@@ -3,11 +3,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { AdapterRoute } from "./ExpressRouteAdapter";
 
-import {
-    IController,
-    IHttpRequest,
-    IHttpResponse,
-} from "@/presentation/protocols";
+import { IController, IHttpResponse } from "@/presentation/protocols";
 
 import { getMockReq } from "@jest-mock/express";
 
@@ -40,9 +36,36 @@ describe("Adapter Router Express", () => {
             body: { anyBody: "any_body" },
         });
 
-        expect(SysUnderTest.condesaParamentros(request)).toEqual({
+        expect(SysUnderTest.consolidaParamentro(request)).toEqual({
             anyBody: "any_body",
         });
         // expect(SysUnderTest.handle.).toBe(controllerSpy);
     });
+    test("should conversion empty of request parameters", () => {
+        const controllerSpy = new ControllerSpy();
+
+        const SysUnderTest = new AdapterRoute(controllerSpy);
+        const request = getMockReq();
+
+        expect(SysUnderTest.consolidaParamentro(request)).toEqual({});
+    });
+    /* test("should garantir que o controller handle seja chamado", () => {
+         const controllerSpy = new ControllerSpy();
+ 
+         const SysUnderTest = new AdapterRoute(controllerSpy);
+         const request = getMockReq({
+             body: { anyBody: "any_body" },
+         });
+         expect(SysUnderTest.handle).toEqual({
+             anyBody: "any_body",
+         });
+         let controller: MockProxy<Controller>
+         controller = mock()
+         controller.handle.mockResolvedValue({
+             statusCode: 200,
+             data: { data: 'any_data' }
+         })
+         expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', anyLocals: 'any_locals' })
+         expect(controller.handle).toHaveBeenCalledTimes(1)
+     }); */
 });
