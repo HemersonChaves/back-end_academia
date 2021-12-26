@@ -42,7 +42,7 @@
     "start:dev": "ts-node-dev -r tsconfig-paths/register --inspect --poll --transpile-only --ignore-watch node_modules --respawn src/server.ts",
     "prepare": "husky install",
     "commit": "git-cz",
-    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand ",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:integration": "yarn test --watch -c jest-integration-config.ts",
     "test:unit": "yarn test --watch --config jest-unit-config.ts",
@@ -56,6 +56,7 @@
   },
   "dependencies": {
     "cpf-cnpj-validator": "^1.0.3",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "yup": "^0.32.11"
   }
