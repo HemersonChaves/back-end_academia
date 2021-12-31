@@ -5,15 +5,17 @@ interface IProps {
     prop_b: unknown;
     prop_c: number;
 }
-
 class EntityConcret<T> extends Entity<T> {}
 describe("Entity", () => {
-    test("should entity instance with any types props", () => {
+    test("should entity instance with any types props and id", () => {
         const props: IProps = {
             prop_a: "props",
             prop_b: false,
             prop_c: 123,
         };
-        const SysUnderTest = new EntityConcret(props);
+        const id = "any_id";
+        const SysUnderTest = new EntityConcret(props, id);
+        expect(SysUnderTest).toBeInstanceOf(Entity);
+        console.log(SysUnderTest.getId());
     });
 });
