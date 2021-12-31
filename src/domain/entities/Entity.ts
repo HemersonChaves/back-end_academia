@@ -1,16 +1,16 @@
 interface IEntity<T> {
-    getId: () => T;
+    getId: () => string;
 }
 abstract class Entity<T> implements IEntity<T> {
-    protected readonly id!: T;
+    protected readonly id!: string;
     protected props: T;
-    constructor(props: T, id?: T) {
+    constructor(props: T, id?: string) {
         if (id) {
             this.id = id;
         }
         this.props = props;
     }
-    getId(): T {
+    getId(): string {
         return this.id;
     }
 }
