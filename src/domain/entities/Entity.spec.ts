@@ -7,7 +7,7 @@ interface IProps {
 }
 class EntityConcret<T> extends Entity<T> {}
 describe("Entity", () => {
-    test("should entity instance with any types props and id", () => {
+    test("should entity instanced with any types props and id", () => {
         const props: IProps = {
             prop_a: "props",
             prop_b: false,
@@ -16,6 +16,15 @@ describe("Entity", () => {
         const id = "any_id";
         const SysUnderTest = new EntityConcret(props, id);
         expect(SysUnderTest).toBeInstanceOf(Entity);
-        console.log(SysUnderTest.getId());
+    });
+    test("should entity instanced without id", () => {
+        const props: IProps = {
+            prop_a: "props",
+            prop_b: false,
+            prop_c: 123,
+        };
+        const SysUnderTest = new EntityConcret(props);
+        expect(SysUnderTest).toBeInstanceOf(Entity);
+        expect(SysUnderTest.getId()).toBe(undefined);
     });
 });
