@@ -7,13 +7,17 @@ abstract class UniqueEntityID<T> implements IUniqueEntityID<T> {
     constructor(value: T) {
         this.value = value;
     }
-    // public equals(id?: UniqueEntityID): boolean {
-    //     if (!id || !UniqueEntityID.isIdentifier(id)) {
-    //         return false;
-    //     }
+    public equals(id?: UniqueEntityID<unknown>): boolean {
+        let isEquals = false;
+        if (!id || !UniqueEntityID.isIdentifier(id)) {
+            return isEquals;
+        }
 
-    //     return id.toValue() === this.value;
-    // }
+        if (id.toValue() === this.value) {
+            isEquals = true;
+        }
+        return isEquals;
+    }
 
     public toString(): string {
         return String(this.value);
@@ -22,8 +26,10 @@ abstract class UniqueEntityID<T> implements IUniqueEntityID<T> {
     public toValue(): T {
         return this.value;
     }
-    // public static isIdentifier = (id: unknown): id is UniqueEntityID => {
-    //     return id instanceof UniqueEntityID;
-    // };
+    public static isIdentifier = (
+        id: unknown
+    ): id is IUniqueEntityID<unknown> => {
+        return id instanceof UniqueEntityID;
+    };
 }
 export { IUniqueEntityID, UniqueEntityID };
