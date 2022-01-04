@@ -43,4 +43,10 @@ describe("UniqueEntityID", () => {
         console.log(SysUnderTest1.equals(SysUnderTest2));
         expect(SysUnderTest1.equals(SysUnderTest2)).toBeFalsy();
     });
+    test("should return false if not eguals UniqueEntityID", () => {
+        const SysUnderTest1 = new UniqueIDIntConcret(123);
+        const SysUnderTest2 = new UniqueIDIntConcret(123);
+        console.log(SysUnderTest1.equals(SysUnderTest2));
+        expect(SysUnderTest1.equals(SysUnderTest2)).toBeTruthy();
+    });
 });
