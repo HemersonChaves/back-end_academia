@@ -15,9 +15,9 @@ abstract class UniqueEntityID<T> implements IUniqueEntityID<T> {
     //     return id.toValue() === this.value;
     // }
 
-    // public toString(): string {
-    //     return String(this.value);
-    // }
+    public toString(): string {
+        return String(this.value);
+    }
 
     public toValue(): T {
         return this.value;
